@@ -1,11 +1,12 @@
 "use client";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+
 import OAuthButton from "@/components/auth/oauth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client"; //import the auth client
-import Link from "next/link";
-import { redirect, useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
 
 export default function SignInPage() {
   const route = useRouter();
@@ -13,16 +14,13 @@ export default function SignInPage() {
   const [password, setPassword] = useState("ZAQ!xsw2");
 
   const signIn = async () => {
-    const { data, error } = await authClient.signIn.email(
+    await authClient.signIn.email(
       {
         email,
         password,
       },
       {
-        onRequest: (ctx) => {
-          //show loading
-        },
-        onSuccess: (ctx) => {
+        onSuccess: (_) => {
           route.push("/dashboard");
         },
         onError: (ctx) => {

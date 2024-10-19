@@ -14,7 +14,7 @@ const matchGlobPattern = (pathname: string, pattern: string) => {
   return regex.test(cleanPathname);
 };
 
-const isProtectedRoute = (pathname: string) => {
+export const isProtectedRoute = (pathname: string) => {
   return protectedRoutes.some((pattern) => matchGlobPattern(pathname, pattern));
 };
 
@@ -39,23 +39,21 @@ const isProtectedRoute = (pathname: string) => {
 export default async function (request: NextRequest) {
   const baseURL = request.nextUrl.origin;
   const pathname = request.nextUrl.pathname;
-  const cookie = request.cookies.get("better-auth.session_token");
-  const session = await fetch(`${baseURL}/api/me`, {
-    method: "POST",
-    body: JSON.stringify({ id: cookie }),
-  });
+  const authcookie = request.cookies.get("better-auth.session_token")?.value;
 
-  if (["/sign-in", "/sign-up"].includes(pathname) && session.ok) {
+  if (["/sign-in", "/sign-up"].includes(pathname) && authcookie) {
     return NextResponse.redirect(new URL("/dashboard", baseURL));
   }
 
-  if (isProtectedRoute(pathname) && !session.ok) {
+  if (isProtectedRoute(pathname) && !authcookie) {
     return NextResponse.redirect(
       new URL(`/sign-in?redirectTo=${pathname}`, baseURL)
     );
   }
 
-  return NextResponse.next();
+  const headers = new Headers(request.headers);
+  headers.set("x-current-path", request.nextUrl.pathname);
+  return NextResponse.next({ headers });
 }
 
 export const config = {

@@ -1,11 +1,12 @@
 "use client";
+import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { useState } from "react";
+
 import OAuthButton from "@/components/auth/oauth";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client"; //import the auth client
-import Link from "next/link";
-import { useRouter, useSearchParams } from "next/navigation";
-import { useState } from "react";
 
 export default function SignUpPage() {
   const route = useRouter();
@@ -14,17 +15,14 @@ export default function SignUpPage() {
   const [name, setName] = useState("ahmad azuddin");
 
   const signUp = async () => {
-    const { data, error } = await authClient.signUp.email(
+    await authClient.signUp.email(
       {
         email,
         password,
         name,
       },
       {
-        onRequest: (ctx) => {
-          //show loading
-        },
-        onSuccess: (ctx) => {
+        onSuccess: (_) => {
           route.push("/dashboard");
         },
         onError: (ctx) => {

@@ -1,14 +1,16 @@
-import { authClient } from "@/lib/auth-client";
 import { useSearchParams } from "next/navigation";
-import { Button } from "../ui/button";
 import React from "react";
+
+import { authClient } from "@/lib/auth-client";
+
+import { Button } from "../ui/button";
 
 function Comp() {
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirectTo") || "/dashboard";
 
   const signin = async (provider: "apple" | "google") => {
-    const data = await authClient.signIn.social({
+    await authClient.signIn.social({
       provider,
       callbackURL: redirectTo,
     });
