@@ -1,8 +1,9 @@
 import { authClient } from "@/lib/auth-client";
 import { useSearchParams } from "next/navigation";
 import { Button } from "../ui/button";
+import React from "react";
 
-export default function OAuthButton() {
+function Comp() {
   const searchParams = useSearchParams();
   const redirectTo = searchParams.get("redirectTo") || "/dashboard";
 
@@ -60,5 +61,13 @@ export default function OAuthButton() {
         </svg>
       </Button>
     </div>
+  );
+}
+
+export default function OAuthButton() {
+  return (
+    <React.Suspense>
+      <Comp />
+    </React.Suspense>
   );
 }
