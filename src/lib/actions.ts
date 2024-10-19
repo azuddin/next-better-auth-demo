@@ -15,11 +15,20 @@ export async function getServerSession() {
     headers: headersObj,
   });
 
-  const cookie = cookies().get("better-auth.session_token")?.value;
+  const cookie = cookies().get(
+    process.env.NODE_ENV === "production"
+      ? "__Secure-better-auth.session_token"
+      : "better-auth.session_token"
+  )?.value;
 
   const isprotected = pathname ? isProtectedRoute(pathname) : undefined;
   if (!session && isprotected) {
-    if (cookie) cookies().delete("better-auth.session_token");
+    if (cookie)
+      cookies().delete(
+        process.env.NODE_ENV === "production"
+          ? "__Secure-better-auth.session_token"
+          : "better-auth.session_token"
+      );
 
     redirect(`/sign-in?redirectTo=${pathname}`);
   }
