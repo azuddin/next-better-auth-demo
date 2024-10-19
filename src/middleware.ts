@@ -39,11 +39,11 @@ export const isProtectedRoute = (pathname: string) => {
 export default async function (request: NextRequest) {
   const baseURL = request.nextUrl.origin;
   const pathname = request.nextUrl.pathname;
-  const authcookie = request.cookies.get(
-    process.env.NODE_ENV === "production"
-      ? "__Secure-better-auth.session_token"
-      : "better-auth.session_token"
-  )?.value;
+  const authcookie =
+    [
+      request.cookies.get("__Secure-better-auth.session_token")?.value,
+      request.cookies.get("better-auth.session_token")?.value,
+    ].filter((c) => c && c.length > 0).length > 0;
 
   if (["/sign-in", "/sign-up"].includes(pathname) && authcookie) {
     return NextResponse.redirect(new URL("/dashboard", baseURL));
