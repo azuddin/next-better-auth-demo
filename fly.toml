@@ -1,9 +1,9 @@
-# fly.toml app configuration file generated for app-polished-shape-8446 on 2024-10-19T18:22:06Z
+# fly.toml app configuration file generated for next-better-auth-demo on 2024-10-19T18:22:06Z
 #
 # See https://fly.io/docs/reference/configuration/ for information about how to use this file.
 #
 
-app = 'app-polished-shape-8446'
+app = 'next-better-auth-demo'
 primary_region = 'sin'
 
 [build]
