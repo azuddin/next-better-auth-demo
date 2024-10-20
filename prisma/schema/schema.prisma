@@ -6,7 +6,7 @@
 
 generator client {
   provider        = "prisma-client-js"
-  previewFeatures = ["omitApi", "relationJoins"]
+  previewFeatures = ["omitApi", "relationJoins", "prismaSchemaFolder"]
 }
 
 datasource db {
@@ -16,15 +16,17 @@ datasource db {
 }
 
 model User {
-  id            String    @id @default(cuid())
-  email         String    @unique
-  name          String?
-  emailVerified Boolean
-  image         String?
-  createdAt     DateTime
-  updatedAt     DateTime
-  Session       Session[]
-  Account       Account[]
+  id               String             @id @default(cuid())
+  email            String             @unique
+  name             String?
+  emailVerified    Boolean
+  image            String?
+  createdAt        DateTime
+  updatedAt        DateTime
+  Session          Session[]
+  Account          Account[]
+  UserOrganisation UserOrganisation[]
+  Invitation       Invitation[]
 
   @@map("user")
 }

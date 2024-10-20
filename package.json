@@ -1,12 +1,15 @@
 {
-  "name": "nextjs-better-auth",
+  "name": "fairnook",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint"
+    "lint": "next lint",
+    "prisma:migrate:dev": "npx dotenv -e .env.local -- prisma migrate dev",
+    "prisma:migrate:reset": "npx dotenv -e .env.local -- prisma migrate reset",
+    "prisma:generate": "npx dotenv -e .env.local -- prisma generate"
   },
   "dependencies": {
     "@prisma/client": "^5.21.1",
@@ -25,6 +28,7 @@
     "@types/node": "^20",
     "@types/react": "^18",
     "@types/react-dom": "^18",
+    "dotenv-cli": "^7.4.2",
     "eslint": "^8",
     "eslint-config-next": "14.2.15",
     "eslint-plugin-simple-import-sort": "^12.1.1",
