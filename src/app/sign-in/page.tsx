@@ -20,7 +20,7 @@ export default function SignInPage() {
         password,
       },
       {
-        onSuccess: (_) => {
+        onSuccess: () => {
           route.push("/dashboard");
         },
         onError: (ctx) => {

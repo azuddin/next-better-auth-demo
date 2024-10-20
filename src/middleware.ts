@@ -1,32 +1,15 @@
 import { NextRequest, NextResponse } from "next/server";
 
-const protectedRoutes = [
+import { isProtectedRoute } from "./lib/utils";
+
+export const protectedRoutes = [
   "/dashboard",
   "/dashboard/**",
   "/*/dashboard",
   "/*/dashboard/**",
 ];
 
-const matchGlobPattern = (pathname: string, pattern: string) => {
-  const cleanPathname = pathname.replace(/\/$/, "");
-  const cleanPattern = pattern.replace(/\/$/, "");
-
-  const regexPattern =
-    "^" +
-    cleanPattern
-      .replace(/\*\*/g, ".*") // '**' matches multiple levels
-      .replace(/\/\*/g, "/[^/]+") // '/*' matches exactly one path segment
-      .replace(/\*/g, "[^/]*"); // '*' in other places matches any characters except '/'
-
-  const regex = new RegExp(regexPattern);
-  return regex.test(cleanPathname);
-};
-
-export const isProtectedRoute = (pathname: string) => {
-  return protectedRoutes.some((pattern) => matchGlobPattern(pathname, pattern));
-};
-
-export default async function (request: NextRequest) {
+export default async function middleware(request: NextRequest) {
   const baseURL = request.nextUrl.origin;
   const pathname = request.nextUrl.pathname;
   const authcookie =

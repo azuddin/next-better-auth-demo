@@ -3,9 +3,8 @@
 import { cookies, headers } from "next/headers";
 import { redirect } from "next/navigation";
 
-import { isProtectedRoute } from "@/middleware";
-
 import { auth } from "./auth";
+import { isProtectedRoute } from "./utils";
 
 export async function getServerSession() {
   const headersObj = headers();

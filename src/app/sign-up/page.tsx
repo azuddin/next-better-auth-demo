@@ -22,7 +22,7 @@ export default function SignUpPage() {
         name,
       },
       {
-        onSuccess: (_) => {
+        onSuccess: () => {
           route.push("/dashboard");
         },
         onError: (ctx) => {
