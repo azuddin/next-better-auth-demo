@@ -9,6 +9,7 @@ export default function ProtectedLayout({
   children: React.ReactNode;
 }) {
   const handleSession = async () => await getServerSession();
+
   useEffect(() => {
     handleSession();
   }, []);
