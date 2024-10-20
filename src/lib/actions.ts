@@ -24,8 +24,8 @@ export async function getServerSession() {
   const isprotected = pathname ? isProtectedRoute(pathname) : undefined;
   if (!session && isprotected) {
     if (cookie) {
-      cookies().delete("__Secure-better-auth.session_token");
-      cookies().delete("better-auth.session_token");
+      cookies().set("__Secure-better-auth.session_token", "", { maxAge: 0 });
+      cookies().set("better-auth.session_token", "", { maxAge: 0 });
     }
 
     redirect(`/sign-in?redirectTo=${pathname}`);
