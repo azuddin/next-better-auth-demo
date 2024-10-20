@@ -1,16 +1,24 @@
-// import { authMiddleware } from "better-auth/next-js";
-// import { cookies } from "next/headers";
 import { NextRequest, NextResponse } from "next/server";
 
-const protectedRoutes = ["/dashboard", "/dashboard/*"];
+const protectedRoutes = [
+  "/dashboard",
+  "/dashboard/**",
+  "/*/dashboard",
+  "/*/dashboard/**",
+];
 
 const matchGlobPattern = (pathname: string, pattern: string) => {
-  // Remove trailing slashes for consistency
   const cleanPathname = pathname.replace(/\/$/, "");
   const cleanPattern = pattern.replace(/\/$/, "");
 
-  // Convert wildcard patterns (e.g., "/dashboard/*") to a regex
-  const regex = new RegExp("^" + cleanPattern.replace(/\*/g, ".*"));
+  const regexPattern =
+    "^" +
+    cleanPattern
+      .replace(/\*\*/g, ".*") // '**' matches multiple levels
+      .replace(/\/\*/g, "/[^/]+") // '/*' matches exactly one path segment
+      .replace(/\*/g, "[^/]*"); // '*' in other places matches any characters except '/'
+
+  const regex = new RegExp(regexPattern);
   return regex.test(cleanPathname);
 };
 
@@ -18,24 +26,6 @@ export const isProtectedRoute = (pathname: string) => {
   return protectedRoutes.some((pattern) => matchGlobPattern(pathname, pattern));
 };
 
-// export default authMiddleware({
-//   customRedirect: async (session, request) => {
-//     const baseURL = request.nextUrl.origin;
-//     const pathname = request.nextUrl.pathname;
-
-//     if (["/sign-in", "/sign-up"].includes(pathname) && session) {
-//       return NextResponse.redirect(new URL("/dashboard", baseURL));
-//     }
-
-//     if (isProtectedRoute(pathname) && !session) {
-//       return NextResponse.redirect(
-//         new URL(`/sign-in?redirectTo=${pathname}`, baseURL)
-//       );
-//     }
-
-//     return NextResponse.next();
-//   },
-// });
 export default async function (request: NextRequest) {
   const baseURL = request.nextUrl.origin;
   const pathname = request.nextUrl.pathname;
@@ -63,5 +53,14 @@ export default async function (request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/sign-in", "/sign-up", "/dashboard/:path*"], // Use Next.js dynamic routing for general matching
+  matcher: [
+    /*
+     * Match all request paths except for the ones starting with:
+     * - api (API routes)
+     * - _next/static (static files)
+     * - _next/image (image optimization files)
+     * - favicon.ico (favicon file)
+     */
+    "/((?!api|_next/static|_next/image|favicon.ico).*)",
+  ],
 };
